@@ -41,7 +41,7 @@ public class Propiedad {
 	private String estadoDisponibilidad;
 
 	@NotNull
-	private Boolean eliminada;
+	private Boolean eliminada = false;
 
 	public Long getId() {
 		return id;
