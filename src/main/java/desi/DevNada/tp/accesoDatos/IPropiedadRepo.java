@@ -17,4 +17,5 @@ public interface IPropiedadRepo extends JpaRepository<Propiedad, Long>{
 	List<Propiedad> findByTipoPropiedadContainingIgnoreCaseAndEliminadaFalse(String tipo);
 	
 	List<Propiedad> findByEstadoDisponibilidadContainingIgnoringCaseAndEliminadaFalse(String estado);
+	
 }

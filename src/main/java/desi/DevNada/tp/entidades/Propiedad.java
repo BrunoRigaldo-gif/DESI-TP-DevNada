@@ -13,33 +13,33 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 public class Propiedad {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Size(min = 1,max = 200, message = "El domicilio es obligatorio")
+
+	@Size(min = 1, max = 200, message = "El domicilio es obligatorio")
 	private String direccion;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Ciudad ciudad;
-	
+
 	@NotBlank(message = "Es obligatoria la asignación de tipo de Propiedad.")
 	private String tipoPropiedad;
-	
+
 	@NotNull(message = "La cantidad de ambientes es obligatoria")
 	@Positive(message = "Debe ser un valor positivo")
 	private Integer cantidadAmbientes;
-	
+
 	@NotNull(message = "Los metros cuadrados son obligatorios")
 	@Positive(message = "El valor debe ser positivo")
 	private Double metrosCuadrados;
-	
-	private String comodidades; 
-	
+
+	private String comodidades;
+
 	@NotBlank(message = "El estado es obligatorio.")
 	private String estadoDisponibilidad;
-	
+
 	@NotNull
 	private Boolean eliminada;
 
@@ -58,7 +58,7 @@ public class Propiedad {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	
+
 	public Ciudad getCiudad() {
 		return ciudad;
 	}
@@ -114,6 +114,5 @@ public class Propiedad {
 	public void setEliminada(Boolean eliminada) {
 		this.eliminada = eliminada;
 	}
-	
-	
+
 }

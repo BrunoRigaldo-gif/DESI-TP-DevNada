@@ -14,12 +14,19 @@ public class PropiedadServiceIMPL implements PropiedadService{
 	private IPropiedadRepo repo;
 	
 	public Propiedad guardar(Propiedad p) {
+		p.setEstadoDisponibilidad("Disponible");
 		return repo.save(p);
 	}
 	
 	public List<Propiedad> listarActivas(){
 		return repo.findByEliminadaFalse();
 	}
+	
+	@Override
+	public List<Propiedad> listarTodas() {
+		return repo.findAll();
+	}
+	
 	public List<Propiedad> listarPorDireccion(String dir){
 		return repo.findByDireccionContainingIgnoreCaseAndEliminadaFalse(dir);
 	}
@@ -38,5 +45,6 @@ public class PropiedadServiceIMPL implements PropiedadService{
 		p.setEliminada(true);
 		repo.save(p);
 	}
+
 
 }

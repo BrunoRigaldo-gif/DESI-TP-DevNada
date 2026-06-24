@@ -10,6 +10,8 @@ public interface PropiedadService {
 	
 	public List<Propiedad> listarActivas();
 	
+	public List<Propiedad> listarTodas();
+	
 	public List<Propiedad> listarPorDireccion(String dir);
 	
 	public List<Propiedad> listarPorCiudad(long id);

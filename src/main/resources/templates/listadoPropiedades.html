@@ -1,32 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Buscar Propiedad</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" th:href="@{/css/main.css}"/>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
+
 <body>
+	<nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/">Inicio</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="/listadoPropiedades">Propiedades</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/publicaciones">Publicaciones</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Pricing</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<br>
 	<div class="container">
-		<div class="row">
+
+		<div>
 			<h1>Lista Propiedades</h1>
 		</div>
-		<table class="table table-sm">
-		  <thead>
-			<tr>
-				<th>ID</th>
-				<th>Direccion</th>
-				<th>Ciudad</th>
-				<th>Tipo</th>
-				<th>Ambientes</th>
-				<th>Metros2</th>
-				<th>Estado</th>
-				<th>Comodidades</th>
-			</tr>
-		  </thead>
-		</table>
+		<div class="row">
+			<div class="col justify-content-center card">
+				<table class=" table table-sm">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Direccion</th>
+							<th>Ciudad</th>
+							<th>Tipo</th>
+							<th>Ambientes</th>
+							<th>Metros2</th>
+							<th>Estado</th>
+							<th>Comodidades</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="propiedad : ${listadoPropiedades}">
+							<td th:text="${propiedad.id}">Id</td>
+							<td th:text="${propiedad.direccion}">Direccion</td>
+							<td th:text="${propiedad.ciudad.nombre}">Ciudad</td>
+							<td th:text="${propiedad.tipoPropiedad}">Tipo</td>
+							<td th:text="${propiedad.cantidadAmbientes}">Ambientes</td>
+							<td th:text="${propiedad.metrosCuadrados}">Metros2</td>
+							<td th:text="${propiedad.estadoDisponibilidad}">Estado</td>
+							<td th:text="${propiedad.comodidades}">Comodidades</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<a href="/propiedades/nuevo"
+					class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Alta</a>
+				<a href=" "
+					class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Eliminación</a>
+				<a href=" "
+					class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Filtrado</a>
+				<a href=" "
+					class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Modificación</a>
+			</div>
+		</div>
+	</div>
 	</div>
 </body>
+
 </html>
