@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Publicaciones</title>
+</head>
+<body>
+    <h1>Listado de Publicaciones</h1>
+    
+    <a th:href="@{/publicaciones/nueva}">+ Crear Nueva Publicación</a>
+    <br><br>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="publi : ${publicaciones}">
+                <td th:text="${publi.id}"></td>
+                <td th:text="${publi.titulo}"></td>
+                <td th:text="${publi.tipoPublicacion}"></td>
+                <td th:text="${publi.estadoPublicacion}"></td>
+                <td th:text="${publi.precioAlquiler}"></td>
+				<td>
+				                    <a th:href="@{/publicaciones/editar/{id}(id=${publi.id})}">✏️ Editar</a>
+				                    &nbsp;&nbsp;
+				                    <a th:href="@{/publicaciones/eliminar/{id}(id=${publi.id})}" 
+				                       onclick="return confirm('¿Estás seguro de que querés eliminar esta publicación?');">
+				                       🗑️ Eliminar
+				                    </a>
+				                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
