@@ -106,6 +106,7 @@ public class Propiedad {
 	public void setEstadoDisponibilidad(String estadoDisponibilidad) {
 		this.estadoDisponibilidad = estadoDisponibilidad;
 	}
+	
 
 	public Boolean getEliminada() {
 		return eliminada;

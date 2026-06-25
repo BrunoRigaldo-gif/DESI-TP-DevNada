@@ -7,6 +7,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -26,7 +27,7 @@
 						<a class="nav-link" href="/publicaciones">Publicaciones</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Pricing</a>
+						<a class="nav-link" href="#">Contratos</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" aria-disabled="true" href="/facturas">Facturas</a>
@@ -37,13 +38,12 @@
 	</nav>
 	<br>
 	<div class="container">
-
 		<div>
 			<h1>Lista Propiedades</h1>
 		</div>
 		<div class="row">
 			<div class="col justify-content-center card">
-				<table class=" table table-sm">
+				<table class=" table table-sm overflow-scroll max-width-150px">
 					<thead>
 						<tr>
 							<th>ID</th>
@@ -66,22 +66,43 @@
 							<td th:text="${propiedad.metrosCuadrados}">Metros2</td>
 							<td th:text="${propiedad.estadoDisponibilidad}">Estado</td>
 							<td th:text="${propiedad.comodidades}">Comodidades</td>
+							<td>
+								<a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+									th:href="@{/editar/{id}(id=${propiedad.id})}">Editar</a>
+								/
+								<a class="link-secondary link-offset-2 link-underline-opacity-25
+									link-underline-opacity-100-hover" th:href="@{/eliminar/{id}(id=${propiedad.id})}"
+									onclick="return confirm('¿Seguro que desea eliminar esta factura?')">
+									Eliminar
+								</a>
+							</td>
 						</tr>
 					</tbody>
+					<div>
+						<div class="btn-group">
+							<button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+								aria-expanded="false">
+								Filtrado
+							</button>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="#">Direccion</a></li>
+								<li><a class="dropdown-item" href="#">Ciudad</a></li>
+								<li><a class="dropdown-item" href="#">Tipo</a></li>
+								<li><a class="dropdown-item" href="#">Estado</a></li>
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li><a class="dropdown-item" href="#">Cancelar</a></li>
+							</ul>
+						</div>
+					</div>
 				</table>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col">
-				<a href="/propiedades/nuevo"
-					class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Alta</a>
-				<a href=" "
-					class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Eliminación</a>
-				<a href=" "
-					class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Filtrado</a>
-				<a href=" "
-					class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Modificación</a>
-			</div>
+		<div>
+			<a href="/propiedades/nuevo"
+				class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Alta
+				de Propiedades</a>
 		</div>
 	</div>
 	</div>

@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Alta de Propiedad</title>
+	<title>Modificación de Propiedad</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -40,11 +40,12 @@
 		<div class="row">
 			<div class="col-6 container justify-content-center card">
 				<br>
-				<h1 class="text-center">Alta de Propiedades</h1>
+				<h1 class="text-center">Modificación de Propiedades</h1>
 				<div class="card-body">
-					<form class="input-group-text-sm" th:action="@{/propiedades}" th:object="${propiedad}"
+					<form class="input-group-text-sm" th:action="@{/editarPropiedades}" th:object="${propiedad}"
 						method="POST">
 						<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+						<input type="hidden" th:field="*{id}" />
 						<div>
 							<span>Dirección:</span>
 							<input type="text" class="form-control" th:field="*{direccion}"
@@ -60,7 +61,8 @@
 						</div>
 						<div>
 							<span>Tipo:</span>
-							<select class="form-select" th:field="*{tipoPropiedad}" aria-label="Seleccionar tipo" required>
+							<select class="form-select" th:field="*{tipoPropiedad}" aria-label="Seleccionar tipo"
+								required>
 								<option value="" disabled selected>Despliegue este menú...</option>
 								<option value="Casa">Casa</option>
 								<option value="Departamento">Departamento</option>
@@ -78,8 +80,18 @@
 						<div>
 							<span>Metros Cuadrados:</span>
 							<input type="number" class="form-control" th:field="*{metrosCuadrados}"
-								aria-label="Sizing example input"
 								placeholder="Escriba la cantidad de metros cuadrados..." required>
+						</div>
+						<div>
+							<span>Estado:</span>
+							<select class="form-select" th:field="*{estadoDisponibilidad}" aria-label="Seleccionar tipo"
+								required>
+								<option value="" disabled selected>Despliegue este menú...</option>
+								<option value="Disponible">Disponible</option>
+								<option value="No Disponible">No Disponible</option>
+								<option value="En Venta">En Venta</option>
+								<option value="Vendido">Vendido</option>
+							</select>
 						</div>
 						<div>
 							<span>Comodidades:</span>
