@@ -1,0 +1,5 @@
+desi\DevNada\tp\accesoDatos\IHistorialEstadoContratoRepo.class
+desi\DevNada\tp\servicios\ContratoService.class
+desi\DevNada\tp\entidades\HistorialEstadoContrato.class
+desi\DevNada\tp\servicios\ContratoServiceIMPL.class
+desi\DevNada\tp\controladores\ContratoController.class

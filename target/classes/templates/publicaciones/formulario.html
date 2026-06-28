@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Alta de Publicación</title>
+</head>
+<body>
+    <h1>Nueva Publicación</h1>
+
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form th:action="@{/publicaciones/guardar}" th:object="${publicacion}" method="post">
+		<input type="hidden" th:field="*{id}">    
+        <label>Título de la publicación:</label><br>
+        <input type="text" th:field="*{titulo}" required><br><br>
+
+        <label>Precio del Alquiler:</label><br>
+        <input type="number" step="0.01" th:field="*{precioAlquiler}" required><br><br>
+
+        <label>Condiciones (ej: Mes de depósito, garantes):</label><br>
+        <textarea th:field="*{condiciones}" required></textarea><br><br>
+
+        <label>Tipo de Operación:</label><br>
+        <select th:field="*{tipoPublicacion}">
+            <option value="ALQUILER">Alquiler Tradicional</option>
+            <option value="TEMPORARIO">Alquiler Temporario</option>
+            <option value="VENTA">Venta</option>
+        </select><br><br>
+
+        <input type="hidden" name="propiedad.id" value="1">
+
+        <button type="submit">Guardar Publicación</button>
+        <a th:href="@{/publicaciones}">Cancelar</a>
+    </form>
+</body>
+</html>
