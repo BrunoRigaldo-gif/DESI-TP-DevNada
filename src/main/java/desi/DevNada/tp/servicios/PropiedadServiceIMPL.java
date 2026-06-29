@@ -1,12 +1,13 @@
 package desi.DevNada.tp.servicios;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import desi.DevNada.tp.accesoDatos.IHistorialEstadoPropiedadRepo;
 import desi.DevNada.tp.accesoDatos.IPropiedadRepo;
 import desi.DevNada.tp.entidades.Ciudad;
+import desi.DevNada.tp.entidades.HistorialEstadoPropiedad;
 import desi.DevNada.tp.entidades.Propiedad;
 import jakarta.transaction.Transactional;
 
@@ -14,11 +15,14 @@ import jakarta.transaction.Transactional;
 public class PropiedadServiceIMPL implements PropiedadService {
 	@Autowired
 	private IPropiedadRepo repo;
+	@Autowired
+	private IHistorialEstadoPropiedadRepo historialRepo;
 
 	@Override
-	public Propiedad guardar(Propiedad p) {
+	public void guardar(Propiedad p) {
 		// Toda Propiedad inicia con el estado Disponible
 		p.setEstadoDisponibilidad("Disponible");
+
 		// Comprobar que no exista otra propiedad con la misma direccion en la misma
 		// ciudad
 		boolean confirmacion = repo.existsByDireccionContainingIgnoreCaseAndCiudadAndEliminadaFalse(p.getDireccion(),
@@ -26,7 +30,8 @@ public class PropiedadServiceIMPL implements PropiedadService {
 		if (confirmacion) {
 			throw new RuntimeException("Ya existe una propiedad activa con esa direccion y ciudad");
 		}
-		return repo.save(p);
+		repo.save(p);
+		historialRepo.save(new HistorialEstadoPropiedad(p, p.getEstadoDisponibilidad(), LocalDateTime.now()));
 	}
 
 	@Override
@@ -67,19 +72,21 @@ public class PropiedadServiceIMPL implements PropiedadService {
 	@Override
 	public void modificar(Propiedad p) {
 		;
-		boolean confirmacion = repo.existsByDireccionIgnoreCaseAndCiudadAndEliminadaFalseAndIdNot(
-				p.getDireccion(), p.getCiudad(), p.getId());
+		boolean confirmacion = repo.existsByDireccionIgnoreCaseAndCiudadAndEliminadaFalseAndIdNot(p.getDireccion(),
+				p.getCiudad(), p.getId());
 		if (confirmacion) {
 			throw new RuntimeException("Ya existe una propiedad activa con esa direccion y ciudad");
 		}
 		actualizacion(p.getId(), p.getDireccion(), p.getCiudad(), p.getTipoPropiedad(), p.getCantidadAmbientes(),
-				p.getMetrosCuadrados(),p.getComodidades(),p.getEstadoDisponibilidad());
+				p.getMetrosCuadrados(), p.getComodidades(), p.getEstadoDisponibilidad());
+
 	}
 
 	@Transactional
 	public void actualizacion(Long id, String direccion, Ciudad ciudad, String tipoPropiedad, Integer cantAmbientes,
 			Double metrosCuadrados, String Comodidades, String estado) {
 		Propiedad propiedadAct = repo.findById(id).orElseThrow();
+		String estadoAntiguo = propiedadAct.getEstadoDisponibilidad();
 		propiedadAct.setCantidadAmbientes(cantAmbientes);
 		propiedadAct.setCiudad(ciudad);
 		propiedadAct.setEstadoDisponibilidad(estado);
@@ -88,6 +95,9 @@ public class PropiedadServiceIMPL implements PropiedadService {
 		propiedadAct.setTipoPropiedad(tipoPropiedad);
 		propiedadAct.setDireccion(direccion);
 		propiedadAct.setEliminada(false);
+		if (!estadoAntiguo.equals(estado)) {
+			historialRepo.save(new HistorialEstadoPropiedad(propiedadAct, propiedadAct.getEstadoDisponibilidad(), LocalDateTime.now()));
+		}
 		repo.save(propiedadAct);
 	}
 
@@ -95,8 +105,10 @@ public class PropiedadServiceIMPL implements PropiedadService {
 	public void eliminar(Long id) {
 		Propiedad p = repo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Propiedad no encontrada con ID: " + id));
+		if (p.getContrato().getEstadoContrato().equalsIgnoreCase("activo")) {
+			throw new RuntimeException("¡No se puede eliminar esta propiedad debido a que tiene un contrato activo!");
+		} else
 		p.setEliminada(true);
-		// agregar comprobacion por contrato activo
 		repo.save(p);
 	}
 

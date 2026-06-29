@@ -6,7 +6,7 @@ import desi.DevNada.tp.entidades.Propiedad;
 
 public interface PropiedadService {
 	
-	public Propiedad guardar(Propiedad p);
+	public void guardar(Propiedad p);
 	
 	public List<Propiedad> listarActivas();
 	

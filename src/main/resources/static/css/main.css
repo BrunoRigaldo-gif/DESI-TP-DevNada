@@ -1,0 +1,25 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+a {
+	color: #555;
+}
+h1 {
+	color: #555;
+	text-align: center;
+}
+.footer {
+    background-color: #343a40;
+    color: #fff;
+    padding: 15px 0;
+}
+
+.footer p {
+    margin-bottom: 0;
+}

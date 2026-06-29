@@ -96,6 +96,7 @@ public class ContratoServiceIMPL implements ContratoService {
 		Contrato contrato = obtenerPorId(id);
 		// Eliminación lógica, igual que el resto de las entidades del proyecto
 		contrato.setEliminado(true);
+		contrato.setEstadoContrato("borrador");
 		contratoRepo.save(contrato);
 	}
 

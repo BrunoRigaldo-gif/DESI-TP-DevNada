@@ -27,7 +27,7 @@
 						<a class="nav-link" href="/publicaciones">Publicaciones</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Contratos</a>
+						<a class="nav-link" href="/contratos">Contratos</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" aria-disabled="true" href="/facturas">Facturas</a>
@@ -38,8 +38,28 @@
 	</nav>
 	<br>
 	<div class="container">
-		<div>
-			<h1>Lista Propiedades</h1>
+		<p style="color: green;" th:text="${exito}"></p>
+		<p style="color: red;" th:text="${error}"></p>
+		<div class="row align-items-center">
+			<div class="col-4">
+				<h1>Lista Propiedades</h1>
+			</div>
+			<div class="btn-group col-1 width-max-10px">
+				<button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+					aria-expanded="false">
+					Filtrado
+				</button>
+				<ul class="dropdown-menu">
+					<li><a class="dropdown-item" href="#">Direccion</a></li>
+					<li><a class="dropdown-item" href="#">Ciudad</a></li>
+					<li><a class="dropdown-item" href="#">Tipo</a></li>
+					<li><a class="dropdown-item" href="#">Estado</a></li>
+					<li>
+						<hr class="dropdown-divider">
+					</li>
+					<li><a class="dropdown-item" href="#">Cancelar</a></li>
+				</ul>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col justify-content-center card">
@@ -53,7 +73,8 @@
 							<th>Ambientes</th>
 							<th>Metros2</th>
 							<th>Estado</th>
-							<th>Comodidades</th>
+							<th>Descripción</th>
+							<th>Propietario</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -65,7 +86,9 @@
 							<td th:text="${propiedad.cantidadAmbientes}">Ambientes</td>
 							<td th:text="${propiedad.metrosCuadrados}">Metros2</td>
 							<td th:text="${propiedad.estadoDisponibilidad}">Estado</td>
-							<td th:text="${propiedad.comodidades}">Comodidades</td>
+							<td th:text="${propiedad.comodidades}">Descripción</td>
+							<td th:text="${propiedad.propietario != null ? propiedad.propietario.dniCuit : ''}">
+								Propietario</td>
 							<td>
 								<a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
 									th:href="@{/editar/{id}(id=${propiedad.id})}">Editar</a>
@@ -78,24 +101,6 @@
 							</td>
 						</tr>
 					</tbody>
-					<div>
-						<div class="btn-group">
-							<button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-								aria-expanded="false">
-								Filtrado
-							</button>
-							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" href="#">Direccion</a></li>
-								<li><a class="dropdown-item" href="#">Ciudad</a></li>
-								<li><a class="dropdown-item" href="#">Tipo</a></li>
-								<li><a class="dropdown-item" href="#">Estado</a></li>
-								<li>
-									<hr class="dropdown-divider">
-								</li>
-								<li><a class="dropdown-item" href="#">Cancelar</a></li>
-							</ul>
-						</div>
-					</div>
 				</table>
 			</div>
 		</div>

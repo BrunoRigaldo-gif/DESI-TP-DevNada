@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -34,7 +35,7 @@ public class Propiedad {
 	@NotNull(message = "Los metros cuadrados son obligatorios")
 	@Positive(message = "El valor debe ser positivo")
 	private Double metrosCuadrados;
-
+	@NotBlank
 	private String comodidades;
 
 	@NotBlank(message = "El estado es obligatorio.")
@@ -42,6 +43,12 @@ public class Propiedad {
 
 	@NotNull
 	private Boolean eliminada = false;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Persona propietario;
+	
+	@OneToOne(mappedBy ="propiedad")
+	private Contrato contrato;
 
 	public Long getId() {
 		return id;
@@ -115,5 +122,23 @@ public class Propiedad {
 	public void setEliminada(Boolean eliminada) {
 		this.eliminada = eliminada;
 	}
+
+	public Persona getPropietario() {
+		return propietario;
+	}
+
+	public void setPropietario(Persona propietario) {
+		this.propietario = propietario;
+	}
+
+	public Contrato getContrato() {
+		return contrato;
+	}
+
+	public void setContrato(Contrato contrato) {
+		this.contrato = contrato;
+	}
+	
+	
 
 }

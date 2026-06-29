@@ -26,7 +26,7 @@
 						<a class="nav-link" href="/publicaciones">Publicaciones</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Contratos</a>
+						<a class="nav-link" href="/contratos">Contratos</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" aria-disabled="true" href="/facturas">Facturas</a>
@@ -60,7 +60,8 @@
 						</div>
 						<div>
 							<span>Tipo:</span>
-							<select class="form-select" th:field="*{tipoPropiedad}" aria-label="Seleccionar tipo" required>
+							<select class="form-select" th:field="*{tipoPropiedad}" aria-label="Seleccionar tipo"
+								required>
 								<option value="" disabled selected>Despliegue este menú...</option>
 								<option value="Casa">Casa</option>
 								<option value="Departamento">Departamento</option>
@@ -82,9 +83,17 @@
 								placeholder="Escriba la cantidad de metros cuadrados..." required>
 						</div>
 						<div>
-							<span>Comodidades:</span>
+							<span>Descripción:</span>
 							<input type="text" class="form-control" th:field="*{comodidades}"
-								aria-label="Sizing example input" placeholder="OPCIONAL: Escriba comodidades...">
+								aria-label="Sizing example input" placeholder="OPCIONAL: Escriba una descripción...">
+						</div>
+						<div>
+							<span>Propietario:</span>
+							<select class="form-select" th:field="*{propietario}" aria-label="Seleccionar propietario" required>
+								<option option value="" disabled selected>Despliegue este menú...</option>
+								<option th:each="p : ${allPersonas}" th:value="${p.id}" th:text="${p.apellido + ', ' + p.nombre + ' - ' + p.dniCuit}">
+								</option>
+							</select>
 						</div>
 						<br>
 						<div class="box-footer">
