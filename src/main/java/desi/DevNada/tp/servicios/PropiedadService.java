@@ -16,7 +16,7 @@ public interface PropiedadService {
 	
 	public List<Propiedad> listarPorDireccion(String dir);
 	
-	public List<Propiedad> listarPorCiudad(long id);
+	public List<Propiedad> listarPorCiudad(String nombre);
 	
 	public List<Propiedad> listarPorTipo(String tipo);
 	

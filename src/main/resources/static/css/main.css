@@ -1,25 +1,36 @@
 body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
 
 main {
-    flex: 1;
+	flex: 1;
 }
+
 a {
 	color: #555;
 }
+
 h1 {
 	color: #555;
 	text-align: center;
 }
+
+h2 {
+	color: #555;
+	text-align: left;
+	font-size: 1.5rem;
+}
+
 .footer {
-    background-color: #343a40;
-    color: #fff;
-    padding: 15px 0;
+	background-color: #343a40;
+	color: #fff;
+	padding: 15px 0;
+	
 }
 
 .footer p {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
+

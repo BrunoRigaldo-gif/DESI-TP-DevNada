@@ -25,7 +25,7 @@ public class PropiedadServiceIMPL implements PropiedadService {
 
 		// Comprobar que no exista otra propiedad con la misma direccion en la misma
 		// ciudad
-		boolean confirmacion = repo.existsByDireccionContainingIgnoreCaseAndCiudadAndEliminadaFalse(p.getDireccion(),
+		boolean confirmacion = repo.existsByDireccionIgnoreCaseAndCiudadAndEliminadaFalse(p.getDireccion(),
 				p.getCiudad());
 		if (confirmacion) {
 			throw new RuntimeException("Ya existe una propiedad activa con esa direccion y ciudad");
@@ -51,22 +51,22 @@ public class PropiedadServiceIMPL implements PropiedadService {
 
 	@Override
 	public List<Propiedad> listarPorDireccion(String dir) {
-		return repo.findByDireccionContainingIgnoreCaseAndEliminadaFalse(dir);
+		return repo.findByDireccionIgnoreCaseAndEliminadaFalse(dir);
 	}
 
 	@Override
-	public List<Propiedad> listarPorCiudad(long id) {
-		return repo.findByCiudad_IdAndEliminadaFalse(id);
+	public List<Propiedad> listarPorCiudad(String nombre) {
+		return repo.findByCiudad_NombreAndEliminadaFalse(nombre);
 	}
 
 	@Override
 	public List<Propiedad> listarPorTipo(String tipo) {
-		return repo.findByTipoPropiedadContainingIgnoreCaseAndEliminadaFalse(tipo);
+		return repo.findByTipoPropiedadIgnoreCaseAndEliminadaFalse(tipo);
 	}
 
 	@Override
 	public List<Propiedad> listarPorEstado(String estado) {
-		return repo.findByEstadoDisponibilidadContainingIgnoringCaseAndEliminadaFalse(estado);
+		return repo.findByEstadoDisponibilidadIgnoringCaseAndEliminadaFalse(estado);
 	}
 
 	@Override

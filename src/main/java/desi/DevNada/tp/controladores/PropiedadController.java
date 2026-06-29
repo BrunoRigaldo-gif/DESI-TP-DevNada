@@ -6,11 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import desi.DevNada.tp.entidades.Propiedad;
 import desi.DevNada.tp.servicios.CiudadService;
 import desi.DevNada.tp.servicios.PersonaService;
 import desi.DevNada.tp.servicios.PropiedadService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Controller
@@ -26,8 +30,34 @@ public class PropiedadController {
 	private PersonaService servicioP;
 
 	@GetMapping("/listadoPropiedades")
-	public String listarPropiedades(Model modelo) {
-		modelo.addAttribute("listadoPropiedades", servicio.listarActivas());
+	public String listarPropiedades(Model modelo, @RequestParam(required = false) String criterio,
+			@RequestParam(required = false) String valor) {
+		List<Propiedad> listaPropiedades;
+		if (criterio != null && valor != null && !valor.isBlank()) {
+			switch (criterio) {
+			case "direccion":
+				listaPropiedades = servicio.listarPorDireccion(valor);
+				break;
+			case "ciudad":
+				listaPropiedades = servicio.listarPorCiudad(valor);
+				break;
+			case "tipo":
+				listaPropiedades = servicio.listarPorTipo(valor);
+				break;
+			case "estado":
+				listaPropiedades = servicio.listarPorEstado(valor);
+				break;
+			default:
+				listaPropiedades = servicio.listarActivas();
+				break;
+			}
+		} else
+			listaPropiedades = servicio.listarActivas();
+
+		modelo.addAttribute("listadoPropiedades", listaPropiedades);
+		modelo.addAttribute("criterio", criterio);
+		modelo.addAttribute("valor", valor);
+
 		return "listadoPropiedades";
 	}
 
@@ -87,9 +117,9 @@ public class PropiedadController {
 	@GetMapping("/eliminar/{id}")
 	public String eliminarPropiedad(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		try {
-		servicio.eliminar(id);
-		redirectAttributes.addFlashAttribute("exito", "¡Propiedad eliminada correctamente!");
-		return "redirect:/listadoPropiedades";
+			servicio.eliminar(id);
+			redirectAttributes.addFlashAttribute("exito", "¡Propiedad eliminada correctamente!");
+			return "redirect:/listadoPropiedades";
 		} catch (RuntimeException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
 			return "redirect:/listadoPropiedades";
