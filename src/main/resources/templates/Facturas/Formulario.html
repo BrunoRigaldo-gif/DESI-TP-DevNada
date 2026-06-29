@@ -9,7 +9,7 @@
 
 <p style="color: red;" th:text="${error}"></p>
 
-<form th:action="${factura.id == null ? '/facturas/guardar' : '/facturas/modificar'}"
+<form th:action="${factura.id == null} ? @{/facturas/guardar} : @{/facturas/modificar/{id}(id=${factura.id})}"
       th:object="${factura}"
       method="post">
 
