@@ -1,13 +1,9 @@
 package desi.DevNada.tp.accesoDatos;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import desi.DevNada.tp.entidades.HistorialEstadoContrato;
+import desi.DevNada.tp.entidades.HistorialEstadoFactura;
 
-public interface IHistorialEstadoContratoRepo extends JpaRepository<HistorialEstadoContrato, Long> {
+public interface IHistorialEstadoFacturaRepo extends JpaRepository<HistorialEstadoFactura, Long> {
 
-	// Historial de un contrato ordenado por fecha de cambio.
-	List<HistorialEstadoContrato> findByContrato_IdOrderByFechaCambioAsc(Long contratoId);
 }
