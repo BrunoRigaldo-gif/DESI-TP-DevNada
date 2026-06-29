@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formulario factura</title>
+</head>
+<body>
+
+<h1 th:text="${factura.id == null ? 'Nueva factura' : 'Modificar factura'}"></h1>
+
+<p style="color: red;" th:text="${error}"></p>
+
+<form th:action="${factura.id == null ? '/facturas/guardar' : '/facturas/modificar'}"
+      th:object="${factura}"
+      method="post">
+
+    <input type="hidden" th:field="*{id}">
+
+    <label>Contrato:</label>
+    <select th:field="*{contrato.id}" th:disabled="${factura.id != null}">
+        <option value="">Seleccione un contrato</option>
+        <option th:each="contrato : ${contratos}"
+                th:value="${contrato.id}"
+                th:text="'Contrato #' + ${contrato.id}">
+        </option>
+    </select>
+
+    <br><br>
+
+    <label>Concepto facturado:</label>
+    <input type="text" th:field="*{conceptoFacturado}">
+
+    <br><br>
+
+    <label>Fecha de emisión:</label>
+    <input type="date" th:field="*{fechaEmision}">
+
+    <br><br>
+
+    <label>Fecha de vencimiento:</label>
+    <input type="date" th:field="*{fechaVencimiento}">
+
+    <br><br>
+
+    <label>Importe:</label>
+    <input type="number" step="0.01" th:field="*{importe}">
+
+    <br><br>
+
+    <label>Estado:</label>
+    <select th:field="*{estadoFactura}">
+        <option value="pendiente">Pendiente</option>
+        <option value="pagada">Pagada</option>
+        <option value="vencida">Vencida</option>
+        <option value="anulada">Anulada</option>
+    </select>
+
+    <h3>Datos de pago</h3>
+
+    <label>Fecha de pago:</label>
+    <input type="date" th:field="*{fechaPago}">
+
+    <br><br>
+
+    <label>Medio de pago:</label>
+    <select th:field="*{medioPago}">
+        <option value="">Seleccione</option>
+        <option value="transferencia">Transferencia</option>
+        <option value="efectivo">Efectivo</option>
+        <option value="debito">Débito</option>
+        <option value="credito">Crédito</option>
+    </select>
+
+    <br><br>
+
+    <label>Importe pagado:</label>
+    <input type="number" step="0.01" th:field="*{importePagado}">
+
+    <br><br>
+
+    <label>Interés:</label>
+    <input type="number" step="0.01" th:field="*{interes}">
+
+    <br><br>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<br>
+
+<a href="/facturas">Volver</a>
+
+</body>
+</html>

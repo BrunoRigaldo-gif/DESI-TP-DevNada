@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import desi.DevNada.tp.accesoDatos.IContratoRepo;
 import desi.DevNada.tp.accesoDatos.IHistorialEstadoPropiedadRepo;
 import desi.DevNada.tp.accesoDatos.IPropiedadRepo;
 import desi.DevNada.tp.entidades.Ciudad;
@@ -17,6 +18,9 @@ public class PropiedadServiceIMPL implements PropiedadService {
 	private IPropiedadRepo repo;
 	@Autowired
 	private IHistorialEstadoPropiedadRepo historialRepo;
+
+	@Autowired
+	private IContratoRepo contratoRepo;
 
 	@Override
 	public void guardar(Propiedad p) {
@@ -105,9 +109,11 @@ public class PropiedadServiceIMPL implements PropiedadService {
 	public void eliminar(Long id) {
 		Propiedad p = repo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Propiedad no encontrada con ID: " + id));
-		if (p.getContrato().getEstadoContrato().equalsIgnoreCase("activo")) {
-			throw new RuntimeException("¡No se puede eliminar esta propiedad debido a que tiene un contrato activo!");
-		} else
+		boolean tieneContratoActivo = contratoRepo.buscarPorPropiedad(id).stream()
+				.anyMatch(c -> "activo".equalsIgnoreCase(c.getEstadoContrato()));
+		if (tieneContratoActivo) {
+			throw new RuntimeException("¡No se puede eliminar esta propiedad porque tiene un contrato activo!");
+		}
 		p.setEliminada(true);
 		repo.save(p);
 	}

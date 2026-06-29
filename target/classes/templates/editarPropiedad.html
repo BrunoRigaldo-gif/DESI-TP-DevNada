@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Modificación de Propiedad</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/">Inicio</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="/listadoPropiedades">Propiedades</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/publicaciones">Publicaciones</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/contratos">Contratos</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" aria-disabled="true" href="/facturas">Facturas</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<br>
+	<div class="container">
+		<div class="row">
+			<div class="col-6 container justify-content-center card">
+				<br>
+				<h1 class="text-center">Modificación de Propiedades</h1>
+				<div class="card-body">
+					<form class="input-group-text-sm" th:action="@{/editarPropiedades}" th:object="${propiedad}"
+						method="POST">
+						<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+						<input type="hidden" th:field="*{id}" />
+						<div>
+							<span>Dirección:</span>
+							<input type="text" class="form-control" th:field="*{direccion}"
+								aria-label="Seleccionar tipo" required placeholder="Escriba la dirección...">
+						</div>
+						<div>
+							<span>Ciudad:</span>
+							<select class="form-select" th:field="*{ciudad}" aria-label="Seleccionar ciudad" required>
+								<option option value="" disabled selected>Despliegue este menú...</option>
+								<option th:each="c : ${allCiudades}" th:value="${c.id}" th:text="${c.nombre}">
+								</option>
+							</select>
+						</div>
+						<div>
+							<span>Tipo:</span>
+							<select class="form-select" th:field="*{tipoPropiedad}" aria-label="Seleccionar tipo"
+								required>
+								<option value="" disabled selected>Despliegue este menú...</option>
+								<option value="Casa">Casa</option>
+								<option value="Departamento">Departamento</option>
+								<option value="Oficina">Oficina</option>
+								<option value="Salón">Salón</option>
+								<option value="Cochera">Cochera</option>
+							</select>
+						</div>
+						<div>
+							<span>Cantidad de Ambientes:</span>
+							<input type="number" class="form-control" th:field="*{cantidadAmbientes}"
+								aria-label="Seleccionar tipo" placeholder="Escriba la cantidad de ambientes..."
+								required>
+						</div>
+						<div>
+							<span>Metros Cuadrados:</span>
+							<input type="number" class="form-control" th:field="*{metrosCuadrados}"
+								placeholder="Escriba la cantidad de metros cuadrados..." required>
+						</div>
+						<div>
+							<span>Estado:</span>
+							<select class="form-select" th:field="*{estadoDisponibilidad}" aria-label="Seleccionar tipo"
+								required>
+								<option value="" disabled selected>Despliegue este menú...</option>
+								<option value="Disponible">Disponible</option>
+								<option value="No Disponible">No Disponible</option>
+								<option value="En Venta">En Venta</option>
+								<option value="Vendido">Vendido</option>
+							</select>
+						</div>
+						<div>
+							<span>Comodidades:</span>
+							<input type="text" class="form-control" th:field="*{comodidades}"
+								aria-label="Sizing example input" placeholder="OPCIONAL: Escriba comodidades...">
+						</div>
+						<br>
+						<div class="box-footer">
+							<button type="submit" class="btn btn-outline-secondary">Guardar</button>
+							<a type="button" class="btn btn-outline-secondary" href="/listadoPropiedades">Cancelar</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	</div>
+</body>
+
+</html>
