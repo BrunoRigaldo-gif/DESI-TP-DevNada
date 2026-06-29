@@ -2,116 +2,124 @@ package desi.DevNada.tp.servicios;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import desi.DevNada.tp.accesoDatos.IFacturaRepo;
 import desi.DevNada.tp.entidades.Factura;
+
+import desi.DevNada.tp.accesoDatos.IHistorialEstadoFacturaRepo;
+import desi.DevNada.tp.entidades.HistorialEstadoFactura;
 
 @Service
 public class FacturaServiceIMPL implements FacturaService {
 
     @Autowired
     private IFacturaRepo facturaRepo;
+    
+    @Autowired
+    private IHistorialEstadoFacturaRepo historialRepo;
 
     @Override
-    public List<Factura> obtenerTodas() {
+    public List<Factura> listar() {
         return facturaRepo.findByEliminadaFalse();
     }
 
     @Override
-    public Factura obtenerPorId(Long id) {
-        return facturaRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontró la factura"));
+    public Factura buscarPorId(Long id) {
+        return facturaRepo.findById(id).orElse(null);
     }
 
+ 
     @Override
-    public void guardarFactura(Factura factura) {
+    public Factura guardar(Factura factura) {
+        validarFactura(factura);
 
-        validarDatosPrincipales(factura);
-
-        // Toda factura nueva arranca pendiente
         factura.setEstadoFactura("pendiente");
-
-        // Eliminación lógica apagada
         factura.setEliminada(false);
 
-        // Como arranca pendiente, no debe tener datos de pago
-        limpiarDatosPago(factura);
+        Factura guardada = facturaRepo.save(factura);
 
-        facturaRepo.save(factura);
+        historialRepo.save(new HistorialEstadoFactura(guardada, guardada.getEstadoFactura()));
+
+        return guardada;
     }
 
     @Override
-    public void modificarFactura(Factura factura) {
+    public Factura modificar(Long id, Factura datosNuevos) {
+        Factura factura = buscarPorId(id);
 
-        Factura facturaBD = obtenerPorId(factura.getId());
+        if (factura == null) {
+            throw new RuntimeException("La factura no existe");
+        }
 
-        if ("pagada".equalsIgnoreCase(facturaBD.getEstadoFactura())) {
+        if ("pagada".equalsIgnoreCase(factura.getEstadoFactura())) {
             throw new RuntimeException("No se puede modificar una factura pagada");
         }
 
-        if ("anulada".equalsIgnoreCase(facturaBD.getEstadoFactura())) {
+        if ("anulada".equalsIgnoreCase(factura.getEstadoFactura())) {
             throw new RuntimeException("No se puede modificar una factura anulada");
         }
 
-        validarDatosPrincipales(factura);
+        String estadoAnterior = factura.getEstadoFactura();
 
-        if (!cambioEstadoPermitido(facturaBD.getEstadoFactura(), factura.getEstadoFactura())) {
-            throw new RuntimeException("El cambio de estado no está permitido");
+        factura.setConceptoFacturado(datosNuevos.getConceptoFacturado());
+        factura.setFechaEmision(datosNuevos.getFechaEmision());
+        factura.setFechaVencimiento(datosNuevos.getFechaVencimiento());
+        factura.setImporte(datosNuevos.getImporte());
+        factura.setEstadoFactura(datosNuevos.getEstadoFactura());
+
+        validarFactura(factura);
+
+        Factura modificada = facturaRepo.save(factura);
+
+        if (!estadoAnterior.equalsIgnoreCase(modificada.getEstadoFactura())) {
+            historialRepo.save(new HistorialEstadoFactura(modificada, modificada.getEstadoFactura()));
         }
 
-        // No se cambia el contrato porque el TP dice que no debe modificarse
-        facturaBD.setConceptoFacturado(factura.getConceptoFacturado());
-        facturaBD.setFechaEmision(factura.getFechaEmision());
-        facturaBD.setFechaVencimiento(factura.getFechaVencimiento());
-        facturaBD.setImporte(factura.getImporte());
-        facturaBD.setEstadoFactura(factura.getEstadoFactura());
-
-        facturaBD.setFechaPago(factura.getFechaPago());
-        facturaBD.setMedioPago(factura.getMedioPago());
-        facturaBD.setImportePagado(factura.getImportePagado());
-        facturaBD.setInteres(factura.getInteres());
-
-        validarPago(facturaBD);
-
-        if (!"pagada".equalsIgnoreCase(facturaBD.getEstadoFactura())) {
-            limpiarDatosPago(facturaBD);
-        }
-
-        facturaRepo.save(facturaBD);
+        return modificada;
     }
 
     @Override
     public void eliminar(Long id) {
+        Factura factura = buscarPorId(id);
 
-        Factura factura = obtenerPorId(id);
+        if (factura == null) {
+            throw new RuntimeException("La factura no existe");
+        }
 
         if ("pagada".equalsIgnoreCase(factura.getEstadoFactura())) {
             throw new RuntimeException("No se puede eliminar una factura pagada");
         }
 
-        // Eliminación lógica
         factura.setEliminada(true);
-
         facturaRepo.save(factura);
     }
 
-    private void validarDatosPrincipales(Factura factura) {
-
-        if (factura.getContrato() == null || factura.getContrato().getId() == null) {
+    private void validarFactura(Factura factura) {
+        if (factura.getContrato() == null) {
             throw new RuntimeException("Debe seleccionar un contrato");
         }
 
+        if (factura.getContrato().getEliminado() != null && factura.getContrato().getEliminado()) {
+            throw new RuntimeException("No se puede facturar un contrato eliminado");
+        }
+
+        if (!"activo".equalsIgnoreCase(factura.getContrato().getEstadoContrato())) {
+            throw new RuntimeException("Solo se puede facturar un contrato activo");
+        }
+
         if (factura.getConceptoFacturado() == null || factura.getConceptoFacturado().isBlank()) {
-            throw new RuntimeException("El concepto facturado es obligatorio");
+            throw new RuntimeException("Debe ingresar el concepto facturado");
         }
 
         if (factura.getFechaEmision() == null) {
-            throw new RuntimeException("La fecha de emisión es obligatoria");
+            throw new RuntimeException("Debe ingresar la fecha de emisión");
         }
 
         if (factura.getFechaVencimiento() == null) {
-            throw new RuntimeException("La fecha de vencimiento es obligatoria");
+            throw new RuntimeException("Debe ingresar la fecha de vencimiento");
         }
 
         if (factura.getFechaVencimiento().isBefore(factura.getFechaEmision())) {
@@ -122,77 +130,8 @@ public class FacturaServiceIMPL implements FacturaService {
             throw new RuntimeException("El importe debe ser positivo");
         }
 
-        /*Epic3 if (!"activo".equalsIgnoreCase(factura.getContrato().getEstadoContrato())) {
-            throw new RuntimeException("Solo se puede facturar un contrato activo");
-        }*/
-
-       /*Epic3  if (factura.getContrato().getEliminado() != null && factura.getContrato().getEliminado()) {
-            throw new RuntimeException("No se puede facturar un contrato eliminado");
-        }*/
-    }
-
-    private void validarPago(Factura factura) {
-
-        if ("pagada".equalsIgnoreCase(factura.getEstadoFactura())) {
-
-            if (factura.getFechaPago() == null) {
-                throw new RuntimeException("Debe cargar la fecha de pago");
-            }
-
-            if (factura.getMedioPago() == null || factura.getMedioPago().isBlank()) {
-                throw new RuntimeException("Debe seleccionar un medio de pago");
-            }
-
-            if (factura.getImportePagado() == null ||
-                    factura.getImportePagado().compareTo(BigDecimal.ZERO) <= 0) {
-                throw new RuntimeException("El importe pagado debe ser positivo");
-            }
+        if (factura.getEstadoFactura() == null || factura.getEstadoFactura().isBlank()) {
+            factura.setEstadoFactura("pendiente");
         }
-
-        if ("anulada".equalsIgnoreCase(factura.getEstadoFactura())) {
-
-            if (factura.getFechaPago() != null || factura.getMedioPago() != null) {
-                throw new RuntimeException("Una factura anulada no puede tener datos de pago");
-            }
-        }
-    }
-
-    private boolean cambioEstadoPermitido(String estadoActual, String estadoNuevo) {
-
-        if (estadoActual == null || estadoNuevo == null) {
-            return false;
-        }
-
-        estadoActual = estadoActual.toLowerCase();
-        estadoNuevo = estadoNuevo.toLowerCase();
-
-        if (estadoActual.equals(estadoNuevo)) {
-            return true;
-        }
-
-        if (estadoActual.equals("pendiente") && estadoNuevo.equals("pagada")) {
-            return true;
-        }
-
-        if (estadoActual.equals("pendiente") && estadoNuevo.equals("vencida")) {
-            return true;
-        }
-
-        if (estadoActual.equals("pendiente") && estadoNuevo.equals("anulada")) {
-            return true;
-        }
-
-        if (estadoActual.equals("vencida") && estadoNuevo.equals("pagada")) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private void limpiarDatosPago(Factura factura) {
-        factura.setFechaPago(null);
-        factura.setMedioPago(null);
-        factura.setImportePagado(null);
-        factura.setInteres(null);
     }
 }

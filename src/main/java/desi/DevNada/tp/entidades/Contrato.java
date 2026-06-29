@@ -7,6 +7,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class Contrato {
@@ -15,14 +21,26 @@ public class Contrato {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull(message = "La fecha de inicio es obligatoria")
 	private LocalDate fechaInicio;
 	
+	// Duración del contrato expresada en meses (debe ser un número positivo).
+	@NotNull(message = "La duración en meses es obligatoria")
+	@Positive(message = "La duración en meses debe ser un número positivo")
 	private Integer duracionMeses;
 	
+	// Importe mensual del alquiler (debe ser un número positivo).
+	@NotNull(message = "El importe mensual es obligatorio")
+	@Positive(message = "El importe mensual debe ser un número positivo")
 	private BigDecimal importeMensual;
 	
+	// Día del mes en que vence la cuota (entre 1 y 31).
+	@NotNull(message = "El día de vencimiento es obligatorio")
+	@Min(value = 1, message = "El día de vencimiento debe estar entre 1 y 31")
+	@Max(value = 31, message = "El día de vencimiento debe estar entre 1 y 31")
 	private Integer diaVencimientoMensual;
 	
+	@NotBlank(message = "La descripción es obligatoria")
 	private String descripcion;
 	
 	private String EstadoContrato; //No estoy seguro del tipo
@@ -31,6 +49,16 @@ public class Contrato {
 
 	
 	
+	// Propiedad alquilada en este contrato.
+	@ManyToOne
+	@NotNull(message = "Debe seleccionar una propiedad asociada")
+	private Propiedad propiedad;
+
+	// Inquilino (persona) que alquila la propiedad.
+	@ManyToOne
+	@NotNull(message = "Debe seleccionar un inquilino")
+	private Persona inquilino;
+
 	public Long getId() {
 		return id;
 	}
@@ -93,6 +121,22 @@ public class Contrato {
 
 	public void setEliminado(Boolean eliminado) {
 		this.eliminado = eliminado;
+	}
+
+	public Propiedad getPropiedad() {
+		return propiedad;
+	}
+
+	public void setPropiedad(Propiedad propiedad) {
+		this.propiedad = propiedad;
+	}
+
+	public Persona getInquilino() {
+		return inquilino;
+	}
+
+	public void setInquilino(Persona inquilino) {
+		this.inquilino = inquilino;
 	}
 	
 	
