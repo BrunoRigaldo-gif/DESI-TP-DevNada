@@ -24,10 +24,10 @@ public class FacturaController {
 
     @GetMapping
     public String listar(
-            @RequestParam(required = false) Long contratoId,
-            @RequestParam(required = false) String estado,
-            @RequestParam(required = false) LocalDate fechaDesde,
-            @RequestParam(required = false) LocalDate fechaHasta,
+            @RequestParam(name ="contratoId", required = false) Long contratoId,
+            @RequestParam(name ="estado", required = false) String estado,
+            @RequestParam(name ="fechaDesde", required = false) LocalDate fechaDesde,
+            @RequestParam(name ="fechaHasta", required = false) LocalDate fechaHasta,
             Model model) {
 
         model.addAttribute("facturas", facturaService.filtrarFacturas(
@@ -44,10 +44,8 @@ public class FacturaController {
 
     @GetMapping("/nueva")
     public String nueva(Model model) {
-        Factura factura = new Factura();
-        factura.setContrato(new Contrato()); // evita null en th:field="*{contrato.id}"
-        model.addAttribute("factura", factura);
-        model.addAttribute("contratos", contratoRepo.findByEliminadoFalseAndEstadoContratoIgnoreCase("activo"));
+        model.addAttribute("factura", new Factura());
+        model.addAttribute("contratos", contratoRepo.findAll());
         return "Facturas/Formulario";
     }
 
@@ -86,7 +84,7 @@ public class FacturaController {
         }
 
         model.addAttribute("factura", factura);
-        model.addAttribute("contratos", contratoRepo.findByEliminadoFalseAndEstadoContratoIgnoreCase("activo"));
+        model.addAttribute("contratos", contratoRepo.findAll());
 
         return "Facturas/Formulario";
     }
@@ -116,3 +114,4 @@ public class FacturaController {
 
         return "redirect:/facturas";
     }
+}

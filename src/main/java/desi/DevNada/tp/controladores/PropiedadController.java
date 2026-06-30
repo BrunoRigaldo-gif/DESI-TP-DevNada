@@ -30,8 +30,8 @@ public class PropiedadController {
 	private PersonaService servicioP;
 
 	@GetMapping("/listadoPropiedades")
-	public String listarPropiedades(Model modelo, @RequestParam(required = false) String criterio,
-			@RequestParam(required = false) String valor) {
+	public String listarPropiedades(Model modelo, @RequestParam(name = "criterio",required = false) String criterio,
+			@RequestParam(name = "valor", required = false) String valor) {
 		List<Propiedad> listaPropiedades;
 		if (criterio != null && valor != null && !valor.isBlank()) {
 			switch (criterio) {
