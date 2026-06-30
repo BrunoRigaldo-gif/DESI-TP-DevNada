@@ -44,8 +44,10 @@ public class FacturaController {
 
     @GetMapping("/nueva")
     public String nueva(Model model) {
-        model.addAttribute("factura", new Factura());
-        model.addAttribute("contratos", contratoRepo.findAll());
+        Factura factura = new Factura();
+        factura.setContrato(new Contrato()); // evita null en th:field="*{contrato.id}"
+        model.addAttribute("factura", factura);
+        model.addAttribute("contratos", contratoRepo.findByEliminadoFalseAndEstadoContratoIgnoreCase("activo"));
         return "Facturas/Formulario";
     }
 
@@ -84,7 +86,7 @@ public class FacturaController {
         }
 
         model.addAttribute("factura", factura);
-        model.addAttribute("contratos", contratoRepo.findAll());
+        model.addAttribute("contratos", contratoRepo.findByEliminadoFalseAndEstadoContratoIgnoreCase("activo"));
 
         return "Facturas/Formulario";
     }

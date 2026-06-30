@@ -18,4 +18,7 @@ public interface IContratoRepo extends JpaRepository<Contrato, Long> {
 	// en la consulta JPQL.
 	@Query("SELECT c FROM Contrato c WHERE c.propiedad.id = :propiedadId AND c.eliminado = false")
 	List<Contrato> buscarPorPropiedad(@Param("propiedadId") Long propiedadId);
+
+	// Devuelve los contratos activos no eliminados (para el formulario de Factura).
+	List<Contrato> findByEliminadoFalseAndEstadoContratoIgnoreCase(String estadoContrato);
 }
