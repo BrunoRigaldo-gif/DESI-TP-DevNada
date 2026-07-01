@@ -7,7 +7,7 @@ import desi.DevNada.tp.entidades.Publicacion;
 @Repository
 public interface IPublicacionRepo extends JpaRepository<Publicacion, Long> {
 
-    // Spring Boot lee el nombre de este método y crea la query SQL automáticamente
+    
     boolean existsByPropiedadIdAndEstadoPublicacion(Long propiedadId, String estadoPublicacion);
 
 }
