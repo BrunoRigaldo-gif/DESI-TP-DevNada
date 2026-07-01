@@ -53,7 +53,7 @@
 							<select class="form-select" th:field="*{propiedad.id}" aria-label="Seleccionar propiedad"
 								required>
 								<option value="" disabled selected>Despliegue este menú...</option>
-								<option th:each="p : ${propiedades}" th:value="${p.id}" th:text="${p.direccion}">
+								<option th:each="p : ${propiedades}" th:value="${p.id}" th:text="${p.direccion + ', ' + p.ciudad.nombre}">
 								</option>
 							</select>
 						</div>

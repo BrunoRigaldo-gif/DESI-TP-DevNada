@@ -1,90 +1,128 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Listado de facturas</title>
+	<title>Listado de facturas</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
+	<nav class="navbar navbar-expand-lg bg-body-tertiary">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/">Inicio</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" aria-current="page" href="/listadoPropiedades">Propiedades</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/publicaciones">Publicaciones</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/contratos">Contratos</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" aria-disabled="true" href="/facturas">Facturas</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<main>
+		<div class="container">
+			<h1>Listado de facturas</h1>
 
-<h1>Listado de facturas</h1>
+			<p style="color: green;" th:text="${mensaje}"></p>
+			<p style="color: red;" th:text="${error}"></p>
 
-<p style="color: green;" th:text="${mensaje}"></p>
-<p style="color: red;" th:text="${error}"></p>
+			<a href="/facturas/nueva">Nueva factura</a>
 
-<a href="/facturas/nueva">Nueva factura</a>
+			<br><br>
+			<form th:action="@{/facturas}" method="get">
+				<label>Contrato:</label>
+				<select name="contratoId">
+					<option value="">Todos</option>
+					<option th:each="contrato : ${contratos}" th:value="${contrato.id}"
+						th:text="'Contrato #' + ${contrato.id}">
+					</option>
+				</select>
 
-<br><br>
+				<label>Estado:</label>
+				<select name="estado">
+					<option value="">Todos</option>
+					<option value="pendiente">Pendiente</option>
+					<option value="pagada">Pagada</option>
+					<option value="vencida">Vencida</option>
+					<option value="anulada">Anulada</option>
+				</select>
 
-<form th:action="@{/facturas}" method="get">
+				<label>Vencimiento desde:</label>
+				<input type="date" name="fechaDesde">
 
-    <label>Contrato:</label>
-    <select name="contratoId">
-        <option value="">Todos</option>
-        <option th:each="contrato : ${contratos}"
-                th:value="${contrato.id}"
-                th:text="'Contrato #' + ${contrato.id}">
-        </option>
-    </select>
+				<label>Vencimiento hasta:</label>
+				<input type="date" name="fechaHasta">
 
-    <label>Estado:</label>
-    <select name="estado">
-        <option value="">Todos</option>
-        <option value="pendiente">Pendiente</option>
-        <option value="pagada">Pagada</option>
-        <option value="vencida">Vencida</option>
-        <option value="anulada">Anulada</option>
-    </select>
+				<button type="submit">Filtrar</button>
+				<a href="/facturas">Limpiar</a>
 
-    <label>Vencimiento desde:</label>
-    <input type="date" name="fechaDesde">
+			</form>
 
-    <label>Vencimiento hasta:</label>
-    <input type="date" name="fechaHasta">
+			<br>
+			<div class="justify-content-center card">
+				<table border="1">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Contrato</th>
+							<th>Concepto</th>
+							<th>Fecha emisión</th>
+							<th>Fecha vencimiento</th>
+							<th>Importe</th>
+							<th>Estado</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
 
-    <button type="submit">Filtrar</button>
-    <a href="/facturas">Limpiar</a>
-
-</form>
-
-<br>
-
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Contrato</th>
-            <th>Concepto</th>
-            <th>Fecha emisión</th>
-            <th>Fecha vencimiento</th>
-            <th>Importe</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        <tr th:each="factura : ${facturas}">
-            <td th:text="${factura.id}"></td>
-            <td th:text="${factura.contrato != null ? 'Contrato #' + factura.contrato.id : 'Sin contrato'}"></td>
-            <td th:text="${factura.conceptoFacturado}"></td>
-            <td th:text="${factura.fechaEmision}"></td>
-            <td th:text="${factura.fechaVencimiento}"></td>
-            <td th:text="${factura.importe}"></td>
-            <td th:text="${factura.estadoFactura}"></td>
-            <td>
-                <a th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar</a>
-                |
-                <a th:href="@{/facturas/eliminar/{id}(id=${factura.id})}"
-                   onclick="return confirm('¿Seguro que desea eliminar esta factura?')">
-                   Eliminar
-                </a>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<br>
-
-<a href="/">Volver al inicio</a>
-
+					<tbody>
+						<tr th:each="factura : ${facturas}">
+							<td th:text="${factura.id}"></td>
+							<td
+								th:text="${factura.contrato != null ? 'Contrato #' + factura.contrato.id : 'Sin contrato'}">
+							</td>
+							<td th:text="${factura.conceptoFacturado}"></td>
+							<td th:text="${factura.fechaEmision}"></td>
+							<td th:text="${factura.fechaVencimiento}"></td>
+							<td th:text="${factura.importe}"></td>
+							<td th:text="${factura.estadoFactura}"></td>
+							<td>
+								<a th:href="@{/facturas/editar/{id}(id=${factura.id})}">Editar</a>
+								|
+								<a th:href="@{/facturas/eliminar/{id}(id=${factura.id})}"
+									onclick="return confirm('¿Seguro que desea eliminar esta factura?')">
+									Eliminar
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<br>
+			<a href="/">Volver al inicio</a>
+		</div>
+	</main>
+	<footer class="footer text-center">
+		<div class="container">
+			<p>Copyright &copy; 2026. Grupo DevNada.</p>
+			<p>Integrantes: Joaquín Ferreyra, Mariana Olguín, Matias Theiler, Bruno Rigaldo.</p>
+		</div>
+	</footer>
 </body>
+
 </html>
