@@ -74,7 +74,7 @@ public class FacturaController {
         return "redirect:/facturas";
     }
     @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Long id, Model model, RedirectAttributes redirect) {
+    public String editar(@PathVariable("id") Long id, Model model, RedirectAttributes redirect) {
 
         Factura factura = facturaService.buscarPorId(id);
 
@@ -90,7 +90,7 @@ public class FacturaController {
     }
 
     @PostMapping("/modificar/{id}")
-    public String modificar(@PathVariable Long id, @ModelAttribute Factura factura, RedirectAttributes redirect) {
+    public String modificar(@PathVariable("id") Long id, @ModelAttribute Factura factura, RedirectAttributes redirect) {
 
         try {
             facturaService.modificar(id, factura);
@@ -103,7 +103,7 @@ public class FacturaController {
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id, RedirectAttributes redirect) {
+    public String eliminar(@PathVariable("id") Long id, RedirectAttributes redirect) {
 
         try {
             facturaService.eliminar(id);
